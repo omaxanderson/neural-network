@@ -11,16 +11,14 @@ class NeuralNetwork {
 		NeuralNetwork();
 		NeuralNetwork(int inputLayerSize, int numHiddenLayers, 
 				int hiddenLayerSize, int outputLayerSize);
-		double forward(Matrix inputs);
+		double forward(std::vector<double> inputs);
 
 	private:
 		int inputLayerSize, numHiddenLayers, hiddenLayerSize, outputLayerSize;
-		Matrix synapseWeights, w2;
+		Matrix synapseWeights;
 
 		void initialize();
-		Matrix dot(const Matrix& mat1, const Matrix& mat2);
-		Matrix sigmoid(const Matrix& mat);
-		double sigmoid(double d);
+		Matrix matrixMultiply(const Matrix& mat1, const Matrix& mat2);
 };
 
 #endif
