@@ -23,8 +23,19 @@ int main(int argc, char* argv[]) {
 	}
 	*/
 	
-	Matrix m = { {23, 54} };
-	std::cout << nn.forward(m) << std::endl;
+	Matrix m = { {0, 0}, {0, 1}, {1, 0}, {1, 1} };
+	Matrix targets = { {0}, {1}, {1}, {0} };
+	Matrix result = nn.predict(m);
+	std::cout << nn.sigmoidPrime(1) << std::endl;
+	std::cout << nn.sigmoidPrime(0.5) << std::endl;
+	std::cout << nn.sigmoidPrime(0.1) << std::endl;
+	std::cout << nn.sigmoidPrime(0) << std::endl;
+	std::cout << "====================\n";
+	for (std::vector<double> v : result) {
+		for (double d : v) {
+			std::cout << d << std::endl;
+		} 
+	}
 
 	return 0; 
 }

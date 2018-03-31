@@ -11,7 +11,9 @@ class NeuralNetwork {
 		NeuralNetwork();
 		NeuralNetwork(int inputLayerSize, int numHiddenLayers, 
 				int hiddenLayerSize, int outputLayerSize);
-		double forward(Matrix inputs);
+		Matrix predict(Matrix inputs);
+		void train(Matrix inputs, Matrix targets);
+		double sigmoidPrime(double d);
 
 	private:
 		int inputLayerSize, numHiddenLayers, hiddenLayerSize, outputLayerSize;
