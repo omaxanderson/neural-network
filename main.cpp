@@ -1,4 +1,5 @@
 #include "NeuralNetwork.h"
+#include "matrix_lib/Matrix.h"
 #include <vector>
 #include <iostream>
 
