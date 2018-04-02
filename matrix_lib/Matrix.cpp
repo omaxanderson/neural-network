@@ -1,14 +1,14 @@
 #include "Matrix.h"
 #include <stdexcept>
 #include <iostream>
-Matrix::Matrix() {
 
-}
 
+// Main constructor -- requires matrix size in number of rows and columns
 Matrix::Matrix(int rows, int cols) : rows(rows), cols(cols) {
 	initialize();
 }
 
+// Destructor
 Matrix::~Matrix() {
 	for (int i = 0; i < rows; i++) {
 		delete[] data[i];
@@ -16,6 +16,7 @@ Matrix::~Matrix() {
 	delete[] data;
 };
 
+// Copy constructor
 Matrix::Matrix(const Matrix& other) {
 	rows = other.rows;
 	cols = other.cols;
@@ -57,7 +58,7 @@ Matrix Matrix::transpose() {
 	return temp;
 }
 
-
+// Fills the matrix with a specified value
 void Matrix::fill(double d) {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -68,6 +69,7 @@ void Matrix::fill(double d) {
 
 /****************** Private class functions  **************************/
 
+// Creates an appropriately sized matrix using given rows and cols
 void Matrix::initialize() {
 	data = new double*[rows];
 	for (int i = 0; i < rows; i++) {
@@ -79,6 +81,10 @@ void Matrix::initialize() {
 }
 /****************  Member operator functions  *******************/
 
+// ELEMENT-WISE matrix multiplication
+// Multiplies each element of the matrix to the respective element in 
+// other matrix
+// Matrices must be same size
 Matrix& Matrix::operator*=(const Matrix& other) {
 	if (rows != other.rows || cols != other.cols) {
 		throw std::invalid_argument("matrices are not the same size");
@@ -91,6 +97,7 @@ Matrix& Matrix::operator*=(const Matrix& other) {
 	return *this;
 }
 
+// Scalar element-wise multiplication
 Matrix& Matrix::operator*=(double d) {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -100,6 +107,7 @@ Matrix& Matrix::operator*=(double d) {
 	return *this;
 }
 
+// Element-wise matrix division
 Matrix& Matrix::operator/=(const Matrix& other) {
 	if (rows != other.rows && cols != other.cols) {
 		throw std::invalid_argument("matrices are not the same size");
@@ -112,6 +120,7 @@ Matrix& Matrix::operator/=(const Matrix& other) {
 	return *this;
 }
 
+// Element-wise scalar division
 Matrix& Matrix::operator/=(double d) {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -121,6 +130,7 @@ Matrix& Matrix::operator/=(double d) {
 	return *this;
 }
 
+// Element-wise matrix addition
 Matrix& Matrix::operator+=(const Matrix& other) {
 	if (rows != other.rows && cols != other.cols) {
 		throw std::invalid_argument("matrices are not the same size");
@@ -133,6 +143,8 @@ Matrix& Matrix::operator+=(const Matrix& other) {
 	return *this;
 
 }
+
+// Element-wise matrix subtraction
 Matrix& Matrix::operator-=(const Matrix& other) {
 	if (rows != other.rows && cols != other.cols) {
 		throw std::invalid_argument("matrices are not the same size");
@@ -145,6 +157,7 @@ Matrix& Matrix::operator-=(const Matrix& other) {
 	return *this;
 }
 
+// Outstream operator function
 std::ostream& operator<<(std::ostream& os, const Matrix& m) {
 	for (int i = 0; i < m.rows; i++) {
 		for (int j = 0; j < m.cols; j++) {

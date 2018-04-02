@@ -5,14 +5,19 @@
 
 class Matrix {
 	public:
-		Matrix();
+		// Constructors and destructor
 		Matrix(int rows, int cols); 
-		~Matrix();
 		Matrix(const Matrix&);
+		~Matrix();
+
+		// Static member functions
 		static Matrix dot(Matrix&, Matrix&);
+
+		// Public member functions
 		Matrix transpose();
 		void fill(double d);
 
+		// Public member operators
 		friend std::ostream& operator<<(std::ostream&, const Matrix&);
 		Matrix& operator*=(const Matrix&);
 		Matrix& operator*=(double);
@@ -25,12 +30,15 @@ class Matrix {
 //		friend std::istream& operator>>(std::istream, const Matrix&);
 
 	private:
+		// Private member functions
 		void initialize();
+
+		// Private instance variables
 		double** data;
 		int rows, cols;
-
 };
 
+// Non-member operator functions
 Matrix operator*(const Matrix&, const Matrix&);
 Matrix operator*(double, const Matrix&);
 Matrix operator*(const Matrix&, double);
