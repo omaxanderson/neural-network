@@ -10,7 +10,7 @@ class NeuralNetwork {
 		NeuralNetwork(int inputLayerSize, int numHiddenLayers, 
 				int hiddenLayerSize, int outputLayerSize);
 		Matrix predict(Matrix& inputs);
-		void train(const Matrix& inputs, const Matrix& targets);
+		void train(Matrix& inputs, Matrix& targets);
 
 	private:
 		Matrix forward(const Matrix& inputs);

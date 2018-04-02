@@ -13,9 +13,17 @@ int main(int argc, char* argv[]) {
 		{ 1, 0 },
 		{ 1, 1 }};
 	Matrix in(inputs);
+	std::vector< std::vector<double> > t = 
+		{ {0},
+		{ 1 },
+		{ 1 },
+		{ 0 }};
+	Matrix targets(t);
 
 	Matrix out = nn.predict(in);
 	std::cout << out << std::endl;
+
+	nn.train(in, targets);
 
 		
 //	Matrix result = nn.predict(m);

@@ -18,15 +18,18 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize, int numHiddenLayers,
 	initialize();
 }
 
-void NeuralNetwork::train(const Matrix& inputs, const Matrix& targets) {
+void NeuralNetwork::train(Matrix& inputs, Matrix& targets) {
 	// perform forward propegation
 	Matrix a2 = Matrix::dot(inputs, w1);
 	Matrix z2 = sigmoid(a2);
 
 	Matrix a3 = Matrix::dot(z2, w2);
+	Matrix z3 = sigmoid(a3);
 
 	// perform backpropegation
 	// calculate error
+	Matrix error3 = targets - z3;
+	std::cout << error3 << std::endl;
 }
 
 // Forward propegation through the neural network
