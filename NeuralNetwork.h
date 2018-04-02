@@ -22,7 +22,7 @@ class NeuralNetwork {
 		Matrix sigmoidPrime(const Matrix& mat);
 		double sigmoidPrime(double d);
 		double sigmoid(double d);
-		std::unordered_map<std::string, Matrix> matrices;
+//		std::unordered_map<std::string, Matrix> matrices;
 };
 
 #endif
