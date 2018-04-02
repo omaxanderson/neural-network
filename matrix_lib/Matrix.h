@@ -9,8 +9,10 @@ class Matrix {
 		Matrix(int rows, int cols); 
 		~Matrix();
 		Matrix(const Matrix&);
-		static Matrix dot(Matrix, Matrix);
+		static Matrix dot(Matrix&, Matrix&);
 		Matrix transpose();
+		void fill(double d);
+
 		friend std::ostream& operator<<(std::ostream&, const Matrix&);
 		Matrix& operator*=(const Matrix&);
 		Matrix& operator*=(double);

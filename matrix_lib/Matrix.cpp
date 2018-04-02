@@ -27,14 +27,21 @@ Matrix::Matrix(const Matrix& other) {
 
 // Returns the dot product of the matrices.
 // Matrices must be NxM and MxK, respectively
-Matrix Matrix::dot(Matrix, Matrix) {
+Matrix Matrix::dot(Matrix& m1, Matrix& m2) {
+	Matrix temp(
 
 }
 
 // Returns the transpose of the matrix
 // If the matrix is an MxN, the transpose is NxM
 Matrix Matrix::transpose() {
-
+	Matrix temp(cols, rows);
+	for (int i = 0; i < cols; i++) {
+		for (int j = 0; j < rows; j++) {
+			temp(i, j) = data[j][i];
+		}
+	}
+	return temp;
 }
 
 void Matrix::initialize() {
@@ -47,8 +54,16 @@ void Matrix::initialize() {
 	}
 }
 
+void Matrix::fill(double d) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			data[i][j] = d;
+		}
+	}
+}
+
 Matrix& Matrix::operator*=(const Matrix& other) {
-	if (rows != other.rows && cols != other.cols) {
+	if (rows != other.rows || cols != other.cols) {
 		throw std::invalid_argument("matrices are not the same size");
 	}
 	for (int i = 0; i < rows; i++) {
