@@ -1,4 +1,5 @@
 #include "Matrix.h"
+#include <stdexcept>
 #include <iostream>
 Matrix::Matrix() {
 
@@ -13,15 +14,25 @@ Matrix::~Matrix() {
 };
 
 Matrix::Matrix(const Matrix& other) {
-	data = other.data;
 	rows = other.rows;
 	cols = other.cols;
+	initialize();
+
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			data[i][j] = other.data[i][j];
+		}
+	}
 }
 
+// Returns the dot product of the matrices.
+// Matrices must be NxM and MxK, respectively
 Matrix Matrix::dot(Matrix, Matrix) {
 
 }
 
+// Returns the transpose of the matrix
+// If the matrix is an MxN, the transpose is NxM
 Matrix Matrix::transpose() {
 
 }
@@ -34,7 +45,63 @@ void Matrix::initialize() {
 			data[i][j] = 0;
 		}
 	}
+}
 
+Matrix& Matrix::operator*=(const Matrix& other) {
+	if (rows != other.rows && cols != other.cols) {
+		throw std::invalid_argument("matrices are not the same size");
+	}
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			data[i][j] *= other.data[i][j];
+		}
+	}
+	return *this;
+}
+
+Matrix& Matrix::operator*=(double d) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			data[i][j] *= d;
+		}
+	}
+	return *this;
+}
+
+Matrix& Matrix::operator/=(const Matrix& other) {
+	if (rows != other.rows && cols != other.cols) {
+		throw std::invalid_argument("matrices are not the same size");
+	}
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			data[i][j] /= other.data[i][j];
+		}
+	}
+	return *this;
+
+}
+Matrix& Matrix::operator+=(const Matrix& other) {
+	if (rows != other.rows && cols != other.cols) {
+		throw std::invalid_argument("matrices are not the same size");
+	}
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			data[i][j] += other.data[i][j];
+		}
+	}
+	return *this;
+
+}
+Matrix& Matrix::operator-=(const Matrix& other) {
+	if (rows != other.rows && cols != other.cols) {
+		throw std::invalid_argument("matrices are not the same size");
+	}
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			data[i][j] -= other.data[i][j];
+		}
+	}
+	return *this;
 }
 
 std::ostream& operator<<(std::ostream& os, const Matrix& m) {
@@ -47,18 +114,29 @@ std::ostream& operator<<(std::ostream& os, const Matrix& m) {
 	return os;
 }
 
-Matrix operator*(const Matrix&, const Matrix&) {
+// Performs an element-wise multiplication on the matrices
+Matrix operator*(const Matrix& m1, const Matrix& m2) {
+	Matrix temp(m1);
+	return (temp *= m2); 
+}
+Matrix operator*(double d, const Matrix& m) {
+	Matrix temp(m);
+	return (temp *= d); 
+}
 
-}
-Matrix operator*(double, const Matrix&) {
-}
-
-Matrix operator*(const Matrix&, double) {
+Matrix operator*(const Matrix& m, double d) {
+	return (m * d); 
 }
 
-Matrix operator/(const Matrix&, const Matrix&) {
+Matrix operator/(const Matrix& m1, const Matrix& m2) {
+	Matrix temp(m1);
+	return (temp /= m2); 
 }
-Matrix operator+(const Matrix&, const Matrix&) {
+Matrix operator+(const Matrix& m1, const Matrix& m2) {
+	Matrix temp(m1);
+	return (temp += m2); 
 }
-Matrix operator-(const Matrix&, const Matrix&) {
+Matrix operator-(const Matrix& m1, const Matrix& m2) {
+	Matrix temp(m1);
+	return (temp -= m2); 
 }
