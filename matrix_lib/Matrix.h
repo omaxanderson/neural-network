@@ -17,6 +17,7 @@ class Matrix {
 		Matrix& operator*=(const Matrix&);
 		Matrix& operator*=(double);
 		Matrix& operator/=(const Matrix&);
+		Matrix& operator/=(double d);
 		Matrix& operator+=(const Matrix&);
 		Matrix& operator-=(const Matrix&);
 		inline double& operator()(int x, int y) { return data[x][y]; }
@@ -35,6 +36,8 @@ Matrix operator*(double, const Matrix&);
 Matrix operator*(const Matrix&, double);
 
 Matrix operator/(const Matrix&, const Matrix&);
+Matrix operator/(double, const Matrix&);
+Matrix operator/(const Matrix&, double);
 Matrix operator+(const Matrix&, const Matrix&);
 Matrix operator-(const Matrix&, const Matrix&);
 
