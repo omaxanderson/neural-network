@@ -1,14 +1,15 @@
 #ifndef _NEURAL_NETWORK_H_
 #define _NEURAL_NETWORK_H_
 
-#include "matrix_lib/Matrix.h"
+#include "Matrix.h"
+#include <unordered_map>
+#include <string>
 
 class NeuralNetwork {
 	public: 
-		NeuralNetwork();
 		NeuralNetwork(int inputLayerSize, int numHiddenLayers, 
 				int hiddenLayerSize, int outputLayerSize);
-		Matrix predict(const Matrix& inputs);
+		Matrix predict(Matrix& inputs);
 		void train(const Matrix& inputs, const Matrix& targets);
 
 	private:
@@ -21,6 +22,7 @@ class NeuralNetwork {
 		Matrix sigmoidPrime(const Matrix& mat);
 		double sigmoidPrime(double d);
 		double sigmoid(double d);
+		std::unordered_map<std::string, Matrix> matrices;
 };
 
 #endif

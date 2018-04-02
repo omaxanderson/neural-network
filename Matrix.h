@@ -2,11 +2,14 @@
 #define _MATRIX_H_
 
 #include <iostream>
+#include <vector>
 
 class Matrix {
 	public:
 		// Constructors and destructor
+		Matrix(); 
 		Matrix(int rows, int cols); 
+		Matrix(std::vector< std::vector<double> >);
 		Matrix(const Matrix&);
 		~Matrix();
 
@@ -16,16 +19,20 @@ class Matrix {
 		// Public member functions
 		Matrix transpose();
 		void fill(double d);
+		int rows() const;
+		int cols() const;
+		void setSize(int rows, int cols);
 
 		// Public member operators
 		friend std::ostream& operator<<(std::ostream&, const Matrix&);
+		Matrix& operator=(const Matrix&);
 		Matrix& operator*=(const Matrix&);
 		Matrix& operator*=(double);
 		Matrix& operator/=(const Matrix&);
 		Matrix& operator/=(double d);
 		Matrix& operator+=(const Matrix&);
 		Matrix& operator-=(const Matrix&);
-		inline double& operator()(int x, int y) { return data[x][y]; }
+		inline double& operator()(int x, int y) const { return data[x][y]; }
 		inline double* operator[](int idx) { return data[idx]; }
 //		friend std::istream& operator>>(std::istream, const Matrix&);
 
@@ -35,7 +42,7 @@ class Matrix {
 
 		// Private instance variables
 		double** data;
-		int rows, cols;
+		int _rows, _cols;
 };
 
 // Non-member operator functions

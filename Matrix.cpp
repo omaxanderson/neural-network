@@ -2,28 +2,47 @@
 #include <stdexcept>
 #include <iostream>
 
+Matrix::Matrix() {
+	_rows = -1;
+	_cols = -1;
+}
 
 // Main constructor -- requires matrix size in number of rows and columns
-Matrix::Matrix(int rows, int cols) : rows(rows), cols(cols) {
+Matrix::Matrix(int rows, int cols) : _rows(rows), _cols(cols) {
 	initialize();
 }
 
+// Allows for a 2d vector to initialize it, makes it 
+// easier to create the mat with an initializer list
+Matrix::Matrix(std::vector< std::vector<double> > mat) {
+	_rows = mat.size();
+	_cols = mat[0].size();
+	initialize();
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
+			data[i][j] = mat[i][j];
+		}
+	}
+}
+
 // Destructor
+// not sure why but this makes causes all sorts of issues when run
 Matrix::~Matrix() {
-	for (int i = 0; i < rows; i++) {
+/*	for (int i = 0; i < _rows; i++) {
 		delete[] data[i];
 	}
 	delete[] data;
+	*/
 };
 
 // Copy constructor
 Matrix::Matrix(const Matrix& other) {
-	rows = other.rows;
-	cols = other.cols;
+	_rows = other._rows;
+	_cols = other._cols;
 	initialize();
 
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] = other.data[i][j];
 		}
 	}
@@ -35,10 +54,10 @@ Matrix::Matrix(const Matrix& other) {
 // TODO - probably swap this and the current multiplication function
 // Matrices must be NxM and MxK, respectively
 Matrix Matrix::dot(Matrix& m1, Matrix& m2) {
-	Matrix temp(m1.rows, m2.cols);
-	for (int i = 0; i < temp.rows; i++) {
-		for (int j = 0; j < temp.cols; j++) {
-			for (int k = 0; k < m1.cols; k++) {
+	Matrix temp(m1._rows, m2._cols);
+	for (int i = 0; i < temp._rows; i++) {
+		for (int j = 0; j < temp._cols; j++) {
+			for (int k = 0; k < m1._cols; k++) {
 				temp(i, j) += m1(i, k) * m2(k, j);
 			}
 		}
@@ -49,9 +68,9 @@ Matrix Matrix::dot(Matrix& m1, Matrix& m2) {
 // Returns the transpose of the matrix
 // If the matrix is an MxN, the transpose is NxM
 Matrix Matrix::transpose() {
-	Matrix temp(cols, rows);
-	for (int i = 0; i < cols; i++) {
-		for (int j = 0; j < rows; j++) {
+	Matrix temp(_cols, _rows);
+	for (int i = 0; i < _cols; i++) {
+		for (int j = 0; j < _rows; j++) {
 			temp(i, j) = data[j][i];
 		}
 	}
@@ -60,37 +79,66 @@ Matrix Matrix::transpose() {
 
 // Fills the matrix with a specified value
 void Matrix::fill(double d) {
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] = d;
 		}
 	}
 }
 
+// Allows for matrices to be declared but not immediately initialized
+// Need to add the functionality to change the size of a preexisting matrix
+void Matrix::setSize(int rows, int cols) {
+	if (_rows < 0 && _cols < 0) {
+		_rows = rows;
+		_cols = cols;
+		initialize();
+	}
+}
+
+int Matrix::rows() const {
+	return _rows;
+}
+int Matrix::cols() const {
+	return _cols;
+}
 /****************** Private class functions  **************************/
 
-// Creates an appropriately sized matrix using given rows and cols
+// Creates an appropriately sized matrix using given rows and _cols
 void Matrix::initialize() {
-	data = new double*[rows];
-	for (int i = 0; i < rows; i++) {
-		data[i] = new double[cols];
-		for (int j = 0; j < cols; j++) {
+	data = new double*[_rows];
+	for (int i = 0; i < _rows; i++) {
+		data[i] = new double[_cols];
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] = 0;
 		}
 	}
 }
 /****************  Member operator functions  *******************/
 
+Matrix& Matrix::operator=(const Matrix& other) {
+	_rows = other._rows;
+	_cols = other._cols;
+	initialize();
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _rows; j++) {
+			data[i][j] = other.data[i][j];
+		}
+	}
+	return *this;
+}
+
+
 // ELEMENT-WISE matrix multiplication
 // Multiplies each element of the matrix to the respective element in 
 // other matrix
 // Matrices must be same size
 Matrix& Matrix::operator*=(const Matrix& other) {
-	if (rows != other.rows || cols != other.cols) {
+	if (_rows != other._rows || _cols != other._cols) {
 		throw std::invalid_argument("matrices are not the same size");
 	}
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] *= other.data[i][j];
 		}
 	}
@@ -99,8 +147,8 @@ Matrix& Matrix::operator*=(const Matrix& other) {
 
 // Scalar element-wise multiplication
 Matrix& Matrix::operator*=(double d) {
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] *= d;
 		}
 	}
@@ -109,11 +157,11 @@ Matrix& Matrix::operator*=(double d) {
 
 // Element-wise matrix division
 Matrix& Matrix::operator/=(const Matrix& other) {
-	if (rows != other.rows && cols != other.cols) {
+	if (_rows != other._rows && _cols != other._cols) {
 		throw std::invalid_argument("matrices are not the same size");
 	}
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] /= other.data[i][j];
 		}
 	}
@@ -122,8 +170,8 @@ Matrix& Matrix::operator/=(const Matrix& other) {
 
 // Element-wise scalar division
 Matrix& Matrix::operator/=(double d) {
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] /= d;
 		}
 	}
@@ -132,11 +180,11 @@ Matrix& Matrix::operator/=(double d) {
 
 // Element-wise matrix addition
 Matrix& Matrix::operator+=(const Matrix& other) {
-	if (rows != other.rows && cols != other.cols) {
+	if (_rows != other._rows && _cols != other._cols) {
 		throw std::invalid_argument("matrices are not the same size");
 	}
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] += other.data[i][j];
 		}
 	}
@@ -146,11 +194,11 @@ Matrix& Matrix::operator+=(const Matrix& other) {
 
 // Element-wise matrix subtraction
 Matrix& Matrix::operator-=(const Matrix& other) {
-	if (rows != other.rows && cols != other.cols) {
+	if (_rows != other._rows && _cols != other._cols) {
 		throw std::invalid_argument("matrices are not the same size");
 	}
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < _rows; i++) {
+		for (int j = 0; j < _cols; j++) {
 			data[i][j] -= other.data[i][j];
 		}
 	}
@@ -159,8 +207,8 @@ Matrix& Matrix::operator-=(const Matrix& other) {
 
 // Outstream operator function
 std::ostream& operator<<(std::ostream& os, const Matrix& m) {
-	for (int i = 0; i < m.rows; i++) {
-		for (int j = 0; j < m.cols; j++) {
+	for (int i = 0; i < m._rows; i++) {
+		for (int j = 0; j < m._cols; j++) {
 			os << m.data[i][j] << " ";
 		}
 		os << std::endl;
