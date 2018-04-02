@@ -24,7 +24,7 @@ void NeuralNetwork::initialize() {
 //	std::cout << "initializing" << std::endl;
 	
 	srand(time(NULL));
-
+/*
 	for (int layer = 0; layer < inputLayerSize; layer++) {
 		std::vector<double> temp;
 		for (int node = 0; node < hiddenLayerSize; node++) {
@@ -39,7 +39,6 @@ void NeuralNetwork::initialize() {
 	}
 
 	//DEBUGGING - print out weight matrices
-	/*
 	for (std::vector<double> vec : w1) {
 		for (double d : vec) {
 			std::cout << d << " ";
@@ -55,46 +54,11 @@ void NeuralNetwork::initialize() {
 	*/
 }
 
-Matrix NeuralNetwork::dot(const Matrix& mat1, const Matrix& mat2) {
-	if (mat1[0].size() != mat2.size()) {
-		return Matrix();
-	}
-	// DEBUGGING
-//	std::cout << "mat1 = " << mat1.size() << "x" << mat1[0].size() << std::endl;
-//	std::cout << "mat2 = " << mat2.size() << "x" << mat2[0].size() << std::endl;
-	int rows = mat1.size();
-	int cols = mat2[0].size();
-	Matrix result;
-	for (int i = 0; i < rows; i++) {
-		result.push_back(std::vector<double>());
-		for (int j = 0; j < cols; j++) {
-			double sum = 0;
-			for (int k = 0; k < mat2.size(); k++) {
-				sum += mat1[i][k] * mat2[k][j];
-			}
-			result[i].push_back(sum);
-		}
-	}
-	return result;
-}
-
-Matrix NeuralNetwork::multiply(double d, Matrix m) {
-	Matrix product;
-	for (int row = 0; row < m.size(); row++) {
-		std::vector<double> temp;
-		for (int col = 0; col < m.size(); col++) {
-			temp.push_back(m[row][col] * d);
-		}
-		product.push_back(temp);
-	}
-	return product;
-}
-
-
 // Calls the activation function specified upon every 
 // item in Matrix mat
 Matrix NeuralNetwork::sigmoid(const Matrix& mat) {
-	Matrix result;
+	//Matrix result(mat);
+	/*
 	for (const std::vector<double> vec : mat) {
 		std::vector<double> temp;
 		for (const double num : vec) {
@@ -102,6 +66,7 @@ Matrix NeuralNetwork::sigmoid(const Matrix& mat) {
 		}
 		result.push_back(temp);
 	}
+	*/
 	return result;
 }
 
@@ -115,6 +80,7 @@ double NeuralNetwork::sigmoid(double d) {
 // item in Matrix mat
 Matrix NeuralNetwork::sigmoidPrime(const Matrix& mat) {
 	Matrix result;
+	/*
 	for (const std::vector<double> vec : mat) {
 		std::vector<double> temp;
 		for (const double num : vec) {
@@ -122,6 +88,7 @@ Matrix NeuralNetwork::sigmoidPrime(const Matrix& mat) {
 		}
 		result.push_back(temp);
 	}
+	*/
 	return result;
 }
 
@@ -130,48 +97,10 @@ double NeuralNetwork::sigmoidPrime(double d) {
 	return std::pow(e, -d) / std::pow(1 + std::pow(e, d), 2);
 }
 
-Matrix NeuralNetwork::elementSubtract(Matrix m1, Matrix m2) {
-	Matrix newMat;
-	for (int i = 0; i < m1.size(); i++) {
-		std::vector<double> temp;
-		for (int j = 0; j < m2.size(); j++) {
-			temp.push_back(m1[i][j] - m2[i][j]);
-		}
-		newMat.push_back(temp);
-	}
-	return newMat;
-}
-
-Matrix NeuralNetwork::elementMultiply(Matrix m1, Matrix m2) {
-	Matrix newMat;
-	for (int i = 0; i < m1.size(); i++) {
-		std::vector<double> temp;
-		for (int j = 0; j < m2.size(); j++) {
-			temp.push_back(m1[i][j] * m2[i][j]);
-		}
-		newMat.push_back(temp);
-	}
-	return newMat;
-}
-			
-
-Matrix NeuralNetwork::transpose(Matrix m) {
-	Matrix newMat;
-	for (int i = 0; i < m[0].size(); i++) {
-		std::vector<double> temp;
-		for (int j = 0; j < m.size(); j++) {
-			temp.push_back(m[j][i]);
-		}
-		newMat.push_back(temp);
-	}
-
-	return newMat;
-}
-
 // Takes the input matrix, multiplies it with the weights, performs an
 // activation function on it, then multiplies it by the second layer of 
 // weights
-Matrix NeuralNetwork::predict(Matrix inputs) {
+Matrix NeuralNetwork::predict(const Matrix& inputs) {
 //	Matrix h1 = dot(inputs, w1);
 //	Matrix a1 = sigmoid(h1);
 	/*
@@ -197,13 +126,14 @@ Matrix NeuralNetwork::predict(Matrix inputs) {
 	return out;
 }
 
-Matrix NeuralNetwork::forward(Matrix inputs) {
+Matrix NeuralNetwork::forward(const Matrix& inputs) {
 	return dot(sigmoid(dot(inputs, w1)), w2);
 }
 
 
-void NeuralNetwork::train(Matrix inputs, Matrix targets) {
+void NeuralNetwork::train(const Matrix& inputs,const  Matrix& targets) {
 	// first we need to forward propegate to get the predictions
+	/*
 	Matrix output = predict(inputs);
 
 	Matrix delta3 = elementMultiply(elementSubtract(output, targets), sigmoidPrime(forward(inputs)));
@@ -230,7 +160,6 @@ void NeuralNetwork::train(Matrix inputs, Matrix targets) {
 	// next lets calculate the error for each output neuron
 	// output matrix will be NxM, where N is the number of input 
 	// examples and M is the number of output neurons
-	/*
 	Matrix error;
 	for (int i = 0; i < output.size(); i++) {
 		double sum = 0;

@@ -3,7 +3,6 @@
 #include <vector>
 #include <iostream>
 
-typedef std::vector< std::vector<double> > Matrix;
 int main(int argc, char* argv[]) {
 	NeuralNetwork nn(2, 1, 3, 1);
 //	NeuralNetwork nn();
@@ -23,11 +22,9 @@ int main(int argc, char* argv[]) {
 		std::cout << std::endl;
 	}
 	*/
-	
-	Matrix m = { {0, 0}, {0, 1}, {1, 0}, {1, 1} };
-	Matrix targets = { {0}, {1}, {1}, {0} };
-	Matrix result = nn.predict(m);
-	nn.train(m, targets);
+		
+//	Matrix result = nn.predict(m);
+//	nn.train(m, targets);
 /*	std::cout << nn.sigmoidPrime(1) << std::endl;
 	std::cout << nn.sigmoidPrime(0.5) << std::endl;
 	std::cout << nn.sigmoidPrime(0.1) << std::endl;
