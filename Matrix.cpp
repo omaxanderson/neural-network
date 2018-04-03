@@ -1,5 +1,6 @@
 #include "Matrix.h"
 #include <stdexcept>
+#include <cmath>
 #include <iostream>
 
 Matrix::Matrix() {
@@ -53,7 +54,7 @@ Matrix::Matrix(const Matrix& other) {
 // instead of elementwise multiplication
 // TODO - probably swap this and the current multiplication function
 // Matrices must be NxM and MxK, respectively
-Matrix Matrix::dot(Matrix& m1, Matrix& m2) {
+Matrix Matrix::dot(const Matrix& m1, const Matrix& m2) {
 	Matrix temp(m1._rows, m2._cols);
 	for (int i = 0; i < temp._rows; i++) {
 		for (int j = 0; j < temp._cols; j++) {
@@ -67,7 +68,7 @@ Matrix Matrix::dot(Matrix& m1, Matrix& m2) {
 
 // Returns the transpose of the matrix
 // If the matrix is an MxN, the transpose is NxM
-Matrix Matrix::transpose() {
+Matrix Matrix::transpose() const {
 	Matrix temp(_cols, _rows);
 	for (int i = 0; i < _cols; i++) {
 		for (int j = 0; j < _rows; j++) {
@@ -102,6 +103,17 @@ int Matrix::rows() const {
 int Matrix::cols() const {
 	return _cols;
 }
+
+Matrix Matrix::pow(const Matrix& m, double d) {
+	Matrix temp(m);
+	for (int i = 0; i < temp.rows(); i++) {
+		for (int j = 0; j < temp.cols(); j++) {
+			temp(i, j) = std::pow(temp(i, j), d);
+		}
+	}
+	return temp;
+}
+
 /****************** Private class functions  **************************/
 
 // Creates an appropriately sized matrix using given rows and _cols

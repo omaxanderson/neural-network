@@ -14,10 +14,11 @@ class Matrix {
 		~Matrix();
 
 		// Static member functions
-		static Matrix dot(Matrix&, Matrix&);
+		static Matrix dot(const Matrix&, const Matrix&);
+		static Matrix pow(const Matrix&, double);
 
 		// Public member functions
-		Matrix transpose();
+		Matrix transpose() const;
 		void fill(double d);
 		int rows() const;
 		int cols() const;

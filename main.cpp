@@ -22,8 +22,14 @@ int main(int argc, char* argv[]) {
 
 	Matrix out = nn.predict(in);
 	std::cout << out << std::endl;
+	nn.setLearningRate(0.5);
 
-	nn.train(in, targets);
+	for (int i = 0; i < 100000; i++) {
+		nn.train(in, targets);
+	}
+
+	Matrix out2 = nn.predict(in);
+	std::cout << out2 << std::endl;
 
 		
 //	Matrix result = nn.predict(m);

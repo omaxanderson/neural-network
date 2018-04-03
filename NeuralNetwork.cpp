@@ -18,18 +18,54 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize, int numHiddenLayers,
 	initialize();
 }
 
-void NeuralNetwork::train(Matrix& inputs, Matrix& targets) {
+void NeuralNetwork::train(const Matrix& inputs, const Matrix& targets) {
 	// perform forward propegation
-	Matrix a2 = Matrix::dot(inputs, w1);
-	Matrix z2 = sigmoid(a2);
+	Matrix z2 = Matrix::dot(inputs, w1);
+	Matrix a2 = sigmoid(z2);
 
-	Matrix a3 = Matrix::dot(z2, w2);
-	Matrix z3 = sigmoid(a3);
+	Matrix z3 = Matrix::dot(a2, w2);
+	Matrix a3 = sigmoid(z3);
 
+	Matrix delta3 = ((targets - a3) * -1) * sigmoidPrime(z3);
+	Matrix dJdW2 = Matrix::dot(a2.transpose(), delta3);
+
+	Matrix delta2 = Matrix::dot(delta3, w2.transpose()) * sigmoidPrime(z2);
+	Matrix dJdW1 = Matrix::dot(inputs.transpose(), delta2);
+
+	/*
+	std::cout << "delta3" << std::endl;
+	std::cout << delta3 << std::endl;
+	std::cout << "djdw2" << std::endl;
+	std::cout << dJdW2 << std::endl;
+	std::cout << "delta2" << std::endl;
+	std::cout << delta2 << std::endl;
+	std::cout << "djdw1" << std::endl;
+	std::cout << dJdW1 << std::endl;
+	*/
+
+	w1 -= learningRate * dJdW1;
+	w2 -= learningRate * dJdW2;
+
+
+	/*
 	// perform backpropegation
 	// calculate error
-	Matrix error3 = targets - z3;
-	std::cout << error3 << std::endl;
+	Matrix error3 = .5 * Matrix::pow(targets - z3, 2.0);
+
+	// if the output has more than one neuron, aka the z3 matrix is a 
+	// MxN where N > 1, we need to sum up those neurons.
+	
+	Matrix error3sum(error3.rows(), 1);
+	for (int i = 0; i < error3.rows(); i++) {
+		double sum = 0;
+		for (int j = 0; j < error3.cols(); j++) {
+			sum += error3(i, j);
+		}
+		error3sum(i, 0) = sum;
+	}
+	std::cout << "error" << std::endl;
+	std::cout << error3sum << std::endl;
+	*/
 }
 
 // Forward propegation through the neural network
@@ -43,6 +79,17 @@ Matrix NeuralNetwork::predict(Matrix& inputs) {
 	return z3;
 }
 
+void NeuralNetwork::setLearningRate(double d) {
+	if (d > 0) {
+		learningRate = d;
+	} else {
+		learningRate = 0.0001;
+	}
+}
+double NeuralNetwork::getLearningRate() {
+	return learningRate;
+}
+
 
 /************ Private member functions  *************************/
 
@@ -51,6 +98,7 @@ void NeuralNetwork::initialize() {
 	srand(time(NULL));
 	w1.setSize(inputLayerSize, hiddenLayerSize);
 	w2.setSize(hiddenLayerSize, outputLayerSize);
+	learningRate = 0.1;
 
 	for (int i = 0; i < inputLayerSize; i++) {
 		for (int j = 0; j < hiddenLayerSize; j++) {

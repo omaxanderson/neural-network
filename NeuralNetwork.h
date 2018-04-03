@@ -10,11 +10,16 @@ class NeuralNetwork {
 		NeuralNetwork(int inputLayerSize, int numHiddenLayers, 
 				int hiddenLayerSize, int outputLayerSize);
 		Matrix predict(Matrix& inputs);
-		void train(Matrix& inputs, Matrix& targets);
+		void train(const Matrix& inputs, const Matrix& targets);
+		void setLearningRate(double d);
+		double getLearningRate();
 
 	private:
+
 		Matrix forward(const Matrix& inputs);
+
 		int inputLayerSize, numHiddenLayers, hiddenLayerSize, outputLayerSize;
+		double learningRate;
 		Matrix w1, w2;
 
 		void initialize();
