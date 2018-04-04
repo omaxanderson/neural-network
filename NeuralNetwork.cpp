@@ -18,20 +18,24 @@ NeuralNetwork::NeuralNetwork(int inputLayerSize, int numHiddenLayers,
 	initialize();
 }
 
-void NeuralNetwork::train(const Matrix& inputs, const Matrix& targets) {
-	// perform forward propegation
-	Matrix z2 = Matrix::dot(inputs, w1);
-	Matrix a2 = sigmoid(z2);
+void NeuralNetwork::train(const Matrix& inputs, const Matrix& targets, int iterations) {
+	for (int i = 0; i < iterations; i++) {
+		// perform forward propegation
+		Matrix z2 = Matrix::dot(inputs, w1);
+		Matrix a2 = sigmoid(z2);
 
-	Matrix z3 = Matrix::dot(a2, w2);
-	Matrix a3 = sigmoid(z3);
+		Matrix z3 = Matrix::dot(a2, w2);
+		Matrix a3 = sigmoid(z3);
 
-	Matrix delta3 = ((targets - a3) * -1) * sigmoidPrime(z3);
-	Matrix dJdW2 = Matrix::dot(a2.transpose(), delta3);
+		Matrix delta3 = ((targets - a3) * -1) * sigmoidPrime(z3);
+		Matrix dJdW2 = Matrix::dot(a2.transpose(), delta3);
 
-	Matrix delta2 = Matrix::dot(delta3, w2.transpose()) * sigmoidPrime(z2);
-	Matrix dJdW1 = Matrix::dot(inputs.transpose(), delta2);
+		Matrix delta2 = Matrix::dot(delta3, w2.transpose()) * sigmoidPrime(z2);
+		Matrix dJdW1 = Matrix::dot(inputs.transpose(), delta2);
 
+		w1 -= learningRate * dJdW1;
+		w2 -= learningRate * dJdW2;
+	}
 	/*
 	std::cout << "delta3" << std::endl;
 	std::cout << delta3 << std::endl;
@@ -42,34 +46,10 @@ void NeuralNetwork::train(const Matrix& inputs, const Matrix& targets) {
 	std::cout << "djdw1" << std::endl;
 	std::cout << dJdW1 << std::endl;
 	*/
-
-	w1 -= learningRate * dJdW1;
-	w2 -= learningRate * dJdW2;
-
-
-	/*
-	// perform backpropegation
-	// calculate error
-	Matrix error3 = .5 * Matrix::pow(targets - z3, 2.0);
-
-	// if the output has more than one neuron, aka the z3 matrix is a 
-	// MxN where N > 1, we need to sum up those neurons.
-	
-	Matrix error3sum(error3.rows(), 1);
-	for (int i = 0; i < error3.rows(); i++) {
-		double sum = 0;
-		for (int j = 0; j < error3.cols(); j++) {
-			sum += error3(i, j);
-		}
-		error3sum(i, 0) = sum;
-	}
-	std::cout << "error" << std::endl;
-	std::cout << error3sum << std::endl;
-	*/
 }
 
 // Forward propegation through the neural network
-Matrix NeuralNetwork::predict(Matrix& inputs) {
+Matrix NeuralNetwork::predict(const Matrix& inputs) {
 	Matrix a2 = Matrix::dot(inputs, w1);
 	Matrix z2 = sigmoid(a2);
 

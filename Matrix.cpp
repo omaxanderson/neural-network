@@ -114,6 +114,26 @@ Matrix Matrix::pow(const Matrix& m, double d) {
 	return temp;
 }
 
+void Matrix::normalize() {
+	// lets do this column by column
+	for (int col = 0; col < _cols; col++) {
+		double min = data[0][col];
+		double max = data[0][col];
+		for (int row = 0; row < _rows; row++) {
+			if (data[row][col] < min) {
+				min = data[row][col];
+			}
+			if (data[row][col] > max) {
+				max = data[row][col];
+			}
+		}
+
+		for (int i = 0; i < _rows; i++) {
+			data[i][col] = (data[i][col] - min) / (max - min);
+		}
+	}
+}
+
 /****************** Private class functions  **************************/
 
 // Creates an appropriately sized matrix using given rows and _cols

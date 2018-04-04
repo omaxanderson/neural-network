@@ -23,6 +23,7 @@ class Matrix {
 		int rows() const;
 		int cols() const;
 		void setSize(int rows, int cols);
+		void normalize();
 
 		// Public member operators
 		friend std::ostream& operator<<(std::ostream&, const Matrix&);

@@ -9,8 +9,8 @@ class NeuralNetwork {
 	public: 
 		NeuralNetwork(int inputLayerSize, int numHiddenLayers, 
 				int hiddenLayerSize, int outputLayerSize);
-		Matrix predict(Matrix& inputs);
-		void train(const Matrix& inputs, const Matrix& targets);
+		Matrix predict(const Matrix& inputs);
+		void train(const Matrix& inputs, const Matrix& targets, int iterations = 1000);
 		void setLearningRate(double d);
 		double getLearningRate();
 
@@ -20,7 +20,7 @@ class NeuralNetwork {
 
 		int inputLayerSize, numHiddenLayers, hiddenLayerSize, outputLayerSize;
 		double learningRate;
-		Matrix w1, w2;
+		Matrix w1, w2, w3, w4;
 
 		void initialize();
 		Matrix sigmoid(const Matrix& mat);
